@@ -31,7 +31,7 @@ input_lines = file_ops.read_input(2)
 for line in input_lines:
     game = Game(int(line.split(' ')[1].split(':')[0]))
     # iterate through pulls in the game and fill object
-    pulls = line.strip('\n').split(':')[1].split(';')
+    pulls = line.split(':')[1].split(';')
     for pull_str in pulls:
         result_pull = parse_pull(pull_str)
         game.pulls.append(result_pull)
