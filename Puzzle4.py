@@ -4,10 +4,10 @@ import re
 
 class Ticket:
     def __init__(self, card_id: str, winning_numbers: list[str], my_numbers: list[str]):
-        # Note: could convert these to ints w/ list comprehension if need in part 2
-        self.card_id = card_id
+        self.card_id = int(card_id)
         self.winning_numbers = winning_numbers
         self.my_numbers = my_numbers
+        self.win_count = 0
 
 
 def parse_ticket(ticket_str: str) -> Ticket:
@@ -20,14 +20,23 @@ def parse_ticket(ticket_str: str) -> Ticket:
 
 
 input_lines = file_ops.read_input(4)
-total_points = 0
+total_points = 0  # part 1
+tickets = []
 for line in input_lines:
+    # build all the Ticket objecst
     ticket = parse_ticket(line)
-    win_count = len([n for n in ticket.winning_numbers if n in ticket.my_numbers])
-    points = 1 * 2 ** (win_count - 1) if win_count > 0 else 0
+    ticket.win_count = len([n for n in ticket.winning_numbers if n in ticket.my_numbers])
+    points = 1 * 2 ** (ticket.win_count - 1) if ticket.win_count > 0 else 0
     total_points += points
-    print(f' ticket {ticket.card_id}')
-    print(f'ponts: {points} for {len([n for n in ticket.my_numbers if n in ticket.winning_numbers])} wins')
+    tickets.append(ticket)
+for ticket in tickets:  # part 2
+    # When adding more tickets, just use the index of the card_id rather than building a list
+    # print(f'analyzing ticket {ticket.card_id}')
+    for i in range(ticket.win_count):
+        tickets.append(tickets[ticket.card_id + i])
+        # print(f'Adding ticket {tickets[ticket.card_id + i].card_id}')
+
 
 print(f'Final points: {total_points}')
+print(f' Part 2 # of tickets: {len(tickets)}')
 
