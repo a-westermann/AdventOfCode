@@ -2,7 +2,6 @@
 import file_ops
 import re
 
-
 class Range:
     def __init__(self, dest_start: str, source_start: str, length: str):
         self.dest_start = int(dest_start)
