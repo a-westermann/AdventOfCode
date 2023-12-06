@@ -9,7 +9,7 @@ def get_beat_count(time, distance_to_beat):
     print(f' vertex: {vertex}')
     running_total = 1
     time_difference_count = 1
-    while vertex >= distance_to_beat:  # There is probably a way to do this with a single calculation
+    while vertex >= distance_to_beat:  # There is probably a way to do this with a single calculation i/o looping
         running_total += 2
         vertex -= running_total
         time_difference_count += 1
