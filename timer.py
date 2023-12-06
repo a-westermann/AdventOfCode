@@ -11,7 +11,7 @@ class TimeHandler:
 
     def fetch_time(self) -> str:
         total_time = round(time() - self.timer, 2)
-        return (f'{total_time} seconds  (that\'s {round(total_time / 60, 2)} minutes)'
+        return (f'\n\nCode finished in {total_time} seconds  (that\'s {round(total_time / 60, 2)} minutes)'
                 f'\n{self.get_exclamation(total_time)}')
 
     def get_exclamation(self, total_time: float):
