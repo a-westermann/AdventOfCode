@@ -44,7 +44,7 @@ p2_total_beats = get_beat_count(part2_time, part2_distance)
 
 print(f'Part 1 total beats: {total_beats}')
 print(f'Part 2 total beats: {p2_total_beats}')
-print(timer.fetch_time())
+print(timer.fetch_time())  # 5.23 seconds
 
 
 # Parabola equation: x^2 = -4ay + a
