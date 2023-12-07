@@ -40,9 +40,10 @@ def convert_js(counts) -> (str, int):
     j_applied = False
     for c in counts:
         if c[0] == 'J':
-            c[1] = 0 if c[1] < 5 else 5
+            c[1] = 0 if c[1] < 5 else 5  # account for 5 of a kind Jacks
             continue
         if not j_applied:
+            # Apply the J's to each instance of the card's counts
             for card in counts:
                 card[1] += j_count if card[0] == c[0] else 0
             j_applied = True
