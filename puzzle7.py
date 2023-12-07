@@ -14,7 +14,7 @@ def get_bucket(hand):
     counts = []
     for card in hand:
         counts.append([card, hand.count(card)])
-    counts = convert_js(counts)
+    counts = convert_js(counts)  # Part 2
     counts = [c[1] for c in counts]
     if 5 in counts:
         return FiveOfAKind
@@ -22,7 +22,7 @@ def get_bucket(hand):
         return FourOfAKind
     elif 3 in counts and 2 in counts:
         return FullHouse
-    elif 3 in counts:  # or (-1 in hand and 2 in counts):
+    elif 3 in counts:
         return ThreeOfAKind
     elif len([c for c in counts if c == 2]) == 4:
         return TwoPair
