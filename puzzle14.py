@@ -26,7 +26,12 @@ def tilt(direction: (int, int), platform: list[str]) -> list[str]:
 timer = TimeHandler()
 input_lines = file_ops.read_input(14)
 tilted_platform = tilt((0, 1), input_lines)
-for t in tilted_platform:
-    print(t)
+p1_total_load = 0
+for r, row in enumerate(tilted_platform):
+    print(row)
+    for char in row:
+        if char == 'O':
+            p1_total_load += len(tilted_platform) - r
 
-print(timer.fetch_time())
+print(f'Part 1: {p1_total_load}')
+print(timer.fetch_time())  # 0.03 seconds
