@@ -54,7 +54,7 @@ def beam_beams(beam: Beam):
 
 
 timer = TimeHandler()
-sys.setrecursionlimit(999999)
+sys.setrecursionlimit(9999999)
 input_lines = file_ops.read_input(16)
 tiles = []
 for r, line in enumerate(input_lines):  # build the grid
