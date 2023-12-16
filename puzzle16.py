@@ -1,6 +1,7 @@
 import file_ops
 from timer import TimeHandler
 import sys
+from functools import cache
 
 UP = (0, -1)
 DOWN = (0, 1)
@@ -15,7 +16,12 @@ class Tile:
         # e.g., beam going LEFT hits the [2] for each of these (see dirs)
         self.character = character
         self.x, self.y = x, y
+        self.beam_history = set()
+    @cache
     def get_dir(self, direction: (int, int)):
+        if direction in self.beam_history:
+            return None  # already had a beam pass this way. No need to repeat
+        self.beam_history.add(direction)
         if self.character == '.':
             return [direction], [direction], [direction], [direction], [direction]
         if self.character == '\\':
@@ -45,8 +51,12 @@ def beam_beams(beam: Beam):
     hit_tile = get_tile_at(next_pos, tiles)
     energized_tiles.add(hit_tile)
     new_dirs = hit_tile.get_dir(beam.dir)[dirs.index(beam.dir)]
+    if not new_dirs:
+        return  # already sent a beam this way on this tile. No need to repeat
+    print(f'beam dir = {beam.dir}  x{beam.x} y{beam.y}     new_dirs: {new_dirs}')
     beam.dir = new_dirs[0]
     beam_beams(beam)
+    print(len(energized_tiles))
     if len(new_dirs) > 1:  # create a new beam for the split
         new_beam = Beam(new_dirs[1], next_pos[0], next_pos[1])
         beam_beams(new_beam)
