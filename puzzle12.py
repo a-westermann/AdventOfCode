@@ -32,8 +32,6 @@ for line in input_lines:
     while len(queue) > 0:
         springs, index_start = queue.pop()
         process_layout(springs, index_start)
-    # break
-
 
 
 print(timer.fetch_time())
