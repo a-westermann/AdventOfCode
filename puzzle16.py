@@ -12,8 +12,6 @@ dirs = (UP, DOWN, LEFT, RIGHT, NA)  # access via index
 
 class Tile:
     def __init__(self, character: str, x: int, y: int):
-        # When hit a mirror, check if hit from by beam going UP, DOWN, LEFT, RIGHT
-        # e.g., beam going LEFT hits the [2] for each of these (see dirs)
         self.character = character
         self.x, self.y = x, y
         self.beam_history = set()
@@ -22,6 +20,8 @@ class Tile:
         if direction in self.beam_history:
             return None  # already had a beam pass this way. No need to repeat
         self.beam_history.add(direction)
+        # When hit a mirror, check if hit by beam going UP, DOWN, LEFT, RIGHT
+        # e.g., beam going LEFT hits the [2] for each of these (see dirs above)
         if self.character == '.':
             return [direction], [direction], [direction], [direction], [direction]
         if self.character == '\\':
