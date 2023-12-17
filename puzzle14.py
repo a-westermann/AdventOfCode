@@ -1,9 +1,18 @@
 import file_ops
 from timer import TimeHandler
 
-# If part 2 is rotate different ways, just rotate the actual input
-def tilt(direction: (int, int), platform: list[str]) -> list[str]:
-    # code here to rotate the input based on the direction
+
+def rotate_platform_clockwise(platform: list[str]) -> list[str]:
+    # could use platform.reversed() to be more memory efficient vs. shallow copy
+    rotated = zip(*platform[::-1])
+    rotated = [''.join([a for a in r]) for r in rotated]
+    # [print(r) for r in rotated]
+    return rotated
+    # return [str(a) for a in list(zip(*platform[::-1]))]
+    # return list(zip(*platform[::-1]))
+
+
+def tilt(platform: list[str]) -> list[str]:
     new_layout = []
     for r, line in enumerate(platform):
         new_layout.append('')
@@ -25,13 +34,30 @@ def tilt(direction: (int, int), platform: list[str]) -> list[str]:
 
 timer = TimeHandler()
 input_lines = file_ops.read_input(14)
-tilted_platform = tilt((0, 1), input_lines)
-p1_total_load = 0
+# for x in rotate_platform_clockwise(input_lines):
+#     pass
+
+tilted_platform = input_lines
+tilted_platform = tilt(tilted_platform)
+total_load = 0
 for r, row in enumerate(tilted_platform):
-    print(row)
+    # print(row)
     for char in row:
         if char == 'O':
-            p1_total_load += len(tilted_platform) - r
+            total_load += len(tilted_platform) - r
 
-print(f'Part 1: {p1_total_load}')
+print(f'Total load: {total_load}')
+# Part 2:
+cycles = 1000000000
+for i in range(cycles):
+    if i > 0:
+        tilted_platform = tilt(rotate_platform_clockwise(tilted_platform))
+    for j in range(3):
+        tilted_platform = tilt(rotate_platform_clockwise(tilted_platform))
+        # print('\n\n')
+        # [print(x) for x in tilted_platform]
+    if i % 10 == 0:
+        print(f'cycle: {i}')
+
+
 print(timer.fetch_time())  # 0.03 seconds
