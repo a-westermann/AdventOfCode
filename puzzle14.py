@@ -2,6 +2,13 @@ import file_ops
 from timer import TimeHandler
 
 
+# Note : This methodology doesn't work. Zipping the 
+#  list is too slow. Breaking out a Vertical and Horizontal
+#  method for tilting should work faster 
+# Additionally, there's a trick to not repeat the same 
+#  tilts. If platform looks the same as it did at an earlier 
+#  index, you can extrapolate the final layout to be between 
+#  those two indices.
 def rotate_platform_clockwise(platform: list[str]) -> list[str]:
     # could use platform.reversed() to be more memory efficient vs. shallow copy
     rotated = zip(*platform[::-1])
