@@ -13,7 +13,7 @@ for r in path_director.grid:
 # part 1
 sys.setrecursionlimit(999999)
 # val_grid = path_director.direct_pathing((len(path_director.grid[0]) - 1, len(path_director.grid) - 1), 3)
-val_grid = path_director.direct_pathing((0, 0), 3)
+val_grid = path_director.direct_pathing_17((0, 0), 3)
 for row in val_grid:
     print([r.val_to_target for r in row])
 for row in val_grid:
