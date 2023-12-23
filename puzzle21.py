@@ -24,8 +24,15 @@ path_director.grid = path_director.direct_pathing_21((start_node.y, start_node.x
 #     print([n.steps_to_target for n in y])
 
 total_reachable = 0
+pt2_reachable = 0
+# pt2_multiplier = 26501365 / len(path_director.grid[0])
+# grid_multi = int(26501365 / 130)
+# leftover = 26501365 % 130
+# print(f'{grid_multi}   {leftover}')
 for y in path_director.grid:
     for n in y:
-        total_reachable += 1 if  n.steps_to_target <= 64 and n.steps_to_target % 2 == 0 else 0
+        total_reachable += 1 if n.steps_to_target <= 64 and n.steps_to_target % 2 == 0 else 0
+        # pt2_reachable += 1 if n.steps_to_target % 2 != 0 else 0
 print(f'Part 1: {total_reachable}')  # 0.09 seconds
+# print(f'Part 2: {pt2_reachable * grid_multi + int(.653 * pt2_reachable)}')
 print(timer.fetch_time())

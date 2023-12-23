@@ -44,6 +44,15 @@ class PathDirector:
         return [(self.nodes(y2, x2), i) for (x2, y2), i in neighbor_positions]
 
 
+    def get_neighbors_21_pt2(self, yx) -> list[tuple[Node, int]]:  # the int in the tuple is direction
+        neighbor_positions = [((yx[1] + x2, yx[0] + y2), i) for i, (x2, y2) in
+                              enumerate([(0, -1), (0, 1), (-1, 0), (1, 0)])
+                              # enumerate([(0, -1), (0, 1), (-1, 0), (1, 0)])
+                              ]
+        # print(f'neighbor pos: {neighbor_positions}')
+        return [(self.nodes(y2, x2), i) for (x2, y2), i in neighbor_positions]
+
+
     def direct_pathing_21(self, target_position: (int, int)):
         target = self.nodes(target_position[0], target_position[1])
         for n, i in self.get_neighbors(target_position):
