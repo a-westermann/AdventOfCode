@@ -6,15 +6,28 @@ UP = 0
 DOWN = 1
 LEFT = 2
 RIGHT = 3
-
+def get_oppisite_dir_23(direction):
+    # Could have made these (int, int) instead, but would have to refactor get_neighbors
+    if direction == UP: return DOWN
+    if direction == DOWN: return UP
+    if direction == LEFT: return RIGHT
+    if direction == RIGHT: return LEFT
+    return None
 
 class Node:
-    def __init__(self, x: int, y: int, val: str):
+    def __init__(self, x: int, y: int, val: str, puzzle: int):
         self.x = x
         self.y = y
         self.val = val
         self.steps_to_target = 9999
         self.direction = -1
+        if puzzle == 23:
+            self.slope = None
+            self.steps_to_target = 0
+            if val == '^': self.slope = UP
+            elif val == 'v': self.slope = DOWN
+            elif val == '>': self.slope = RIGHT
+            elif val == '<': self.slope = LEFT
         self.parent_node = None  # the node that this one leads to. Avoid backtracking
         # specific to 17 :
         self.val_to_target = math.inf
@@ -23,13 +36,13 @@ class Node:
 
 
 class PathDirector:
-    def __init__(self, input_lines: list[str]):
+    def __init__(self, input_lines: list[str], puzzle: int):
         self.grid: list[list[Node]] = []
         self.queue = []
         for y in range(len(input_lines)):
             self.grid.append([])
             for x in range(len(input_lines[0])):
-                self.grid[y].append(Node(x, y, input_lines[y][x]))
+                self.grid[y].append(Node(x, y, input_lines[y][x], puzzle))
 
     def nodes(self, y, x) -> Node:
         return self.grid[y][x]
@@ -44,6 +57,27 @@ class PathDirector:
         return [(self.nodes(y2, x2), i) for (x2, y2), i in neighbor_positions]
 
 
+# 23
+    def direct_pathing_23(self, target: Node):
+        for n, i in self.get_neighbors((target.y, target.x)):
+            if n == target.parent_node or n.val == '#' \
+                    or (n.val != '.' and i != get_oppisite_dir_23(n.slope)):
+                continue  # no backtracking, skip rocks
+            if target.steps_to_target + 1 > n.steps_to_target:
+                # found farther path. Update neighbor & add to queue
+                n.steps_to_target = target.steps_to_target + 1
+                n.direction = i
+                n.parent_node = target
+                self.queue.append(n)
+                # sort queue so prioritize the high step nodes, to avoid path duplication
+                self.queue.sort(key=lambda x: x.steps_to_target, reverse=True)
+        if len(self.queue) == 0:
+            return self.grid
+        next_node = self.queue.pop(0)
+        return self.direct_pathing_23(next_node)
+
+
+# 21
     def get_neighbors_21_pt2(self, yx) -> list[tuple[Node, int]]:  # the int in the tuple is direction
         neighbor_positions = [((yx[1] + x2, yx[0] + y2), i) for i, (x2, y2) in
                               enumerate([(0, -1), (0, 1), (-1, 0), (1, 0)])
@@ -72,6 +106,7 @@ class PathDirector:
 
 
 
+# 17
     def direct_pathing_17(self, target_position: (int, int), dir_sync_max: int):
         target = self.grid[target_position[0]][target_position[1]]
         if target.direction == -1:
