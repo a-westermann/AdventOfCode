@@ -24,15 +24,31 @@ class Node:
         if puzzle == 23:
             self.slope = None
             self.steps_to_target = 0
+            self.steps_to_target = dict()
             if val == '^': self.slope = UP
             elif val == 'v': self.slope = DOWN
             elif val == '>': self.slope = RIGHT
             elif val == '<': self.slope = LEFT
-        self.parent_node = None  # the node that this one leads to. Avoid backtracking
+            self.children = dict()  # all children nodes tupel
+            self.prev_dir = -1
+        self.parent_node = dict()  # the node that this one leads to. Avoid backtracking
         # specific to 17 :
         self.val_to_target = math.inf
         self.straight_count = 1
 
+    def set_steps(self, steps):
+        self.steps_to_target = 0
+
+    # def delete_children_recursively(self):
+    #     # found a longer path, clear out all children paths
+    #     [c.set_steps(0) for c in self.children[::-1]]
+    #     [c.children.clear() for c in self.children[::-1]]
+    #     self.children.clear()
+    #
+    # def redo_steps_recrusively(self, steps):
+    #     self.steps_to_target = steps
+    #     for i, c in enumerate(self.children):
+    #         c.steps_to_target = self.steps_to_target + 1 + i
 
 
 class PathDirector:
@@ -59,18 +75,41 @@ class PathDirector:
 
 # 23
     def direct_pathing_23(self, target: Node):
-        for n, i in self.get_neighbors((target.y, target.x)):
-            if n == target.parent_node or n.val == '#' \
-                    or (n.val != '.' and i != get_oppisite_dir_23(n.slope)):
-                continue  # no backtracking, skip rocks
-            if target.steps_to_target + 1 > n.steps_to_target:
+        # paths = enumerate(target.steps_to_target.copy())
+        paths = dict()
+        neighbors = self.get_neighbors((target.y, target.x))
+        for e in target.steps_to_target.keys():
+            paths[e] = target.steps_to_target[e]
+        for path_index in paths.keys():
+            steps = paths[path_index]
+            for index in range(len(neighbors)):
+                n = neighbors[index][0]
+                i = neighbors[index][1]
+                # if n == target.parent_node or n.val == '#':
+                if n.val == '#' \
+                    or (path_index in target.children.keys()
+                    and n in target.children[path_index]) \
+                    or (path_index in target.parent_node.keys()
+                        and n == target.parent_node[path_index]):
+                        # or target in n.children:  # PART 2
+                        # or (n.val != '.' and i != get_oppisite_dir_23(n.slope)):  # PART 1
+                    continue  # no backtracking, skip rocks
+                target.steps_to_target[path_index + index] = steps
+                n.steps_to_target[path_index + index] = steps + 1
+                # if target.steps_to_target + 1 > n.steps_to_target:
                 # found farther path. Update neighbor & add to queue
-                n.steps_to_target = target.steps_to_target + 1
-                n.direction = i
-                n.parent_node = target
                 self.queue.append(n)
+                # n.steps_to_target = target.steps_to_target + 1
+                # n.direction = i
+                # n.parent_node = target
+                n.parent_node[path_index + index] = target
                 # sort queue so prioritize the high step nodes, to avoid path duplication
-                self.queue.sort(key=lambda x: x.steps_to_target, reverse=True)
+                # self.queue.sort(key=lambda x: x.steps_to_target, reverse=True)
+                # if path_index + index >= len(target.children):
+                #     target.children.append([])
+                if path_index + index not in target.children.keys():
+                    target.children[path_index + index] = []
+                target.children[path_index + index].append(n)
         if len(self.queue) == 0:
             return self.grid
         next_node = self.queue.pop(0)
