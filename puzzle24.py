@@ -23,6 +23,8 @@ for line in input_lines:
 # figure out the # of cycles it takes to cross paths
 # find b for both hails, offset ?
 # If slopes are parallel, No intercept... unless they collide
+# essentially just need to solve for x & y such that they are equal in both equations
+# y2 + y1 = mx2 + mx1 + b1 + b2
 # test_area = range(200000000000000, 400000000000001)
 test_area = range(0, 10)
 for i, h in enumerate(storm):
